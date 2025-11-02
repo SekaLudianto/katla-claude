@@ -3,1899 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordle Indonesia - TikTok Live</title>
+    <title>TikTok Live Wordle</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat ikon (untuk tombol kirim) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --color-absent: #787c7e;
-            --color-present: #c9b458;
-            --color-correct: #6aaa64;
-            --color-bg: #121213;
-            --color-surface: #1a1a1b;
-            --color-text: #ffffff;
-            --color-border: #3a3a3c;
-            --color-key-bg: #818384;
-            --color-primary: #ff0050;
-            --color-tiktok: #00f2ea;
+        /* Menggunakan font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+/* ... existing code ... -->
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; /* bg-gray-400 */
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 100%;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .tab-navigation {
-            display: flex;
-            background: var(--color-surface);
-            border-bottom: 2px solid var(--color-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            background: transparent;
-            color: var(--color-text);
-            border: none;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .tab-btn.active {
-            color: var(--color-tiktok);
-            border-bottom-color: var(--color-tiktok);
-            background: rgba(0, 242, 234, 0.1);
-        }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .tab-content {
-            display: none;
-            flex: 1;
-            overflow-y: auto;
-            background: var(--color-bg);
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .game-section {
-            padding: 15px;
-            max-width: 100%;
-        }
-
-        .chat-section {
-            padding: 15px;
-            max-width: 100%;
-            height: calc(100vh - 60px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--color-border);
-            padding-bottom: 15px;
-        }
-
-        .header h1 {
-            color: var(--color-text);
-            font-size: 1.8em;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tiktok-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--color-tiktok);
-            color: #000;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        .tiktok-badge::before {
-            content: "🎵";
-            font-size: 1.2em;
-        }
-
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            color: var(--color-text);
-            gap: 8px;
-        }
-
-        .info-box {
-            background: var(--color-surface);
-            padding: 8px 15px;
-            border-radius: 8px;
-            text-align: center;
-            flex: 1;
-        }
-
-        .info-label {
-            font-size: 0.7em;
-            opacity: 0.7;
-            margin-bottom: 3px;
-        }
-
-        .info-value {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .mode-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .mode-btn {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid var(--color-border);
-            background: var(--color-surface);
-            color: var(--color-text);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .mode-btn.active {
-            background: var(--color-primary);
-            border-color: var(--color-primary);
-            color: white;
-        }
-
-        .mode-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .timer-display {
-            background: linear-gradient(135deg, var(--color-primary), #ff4d8f);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .timer-display.warning {
-            animation: timerPulse 1s infinite;
-        }
-
-        @keyframes timerPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .timer-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-        }
-
-        .timer-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        .players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 15px;
-            background: var(--color-surface);
-            border-radius: 10px;
-        }
-
-        .player-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .player-card.winner {
-            border-color: var(--color-correct);
-            background: rgba(106, 170, 100, 0.2);
-        }
-
-        .player-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--color-tiktok);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            border: 3px solid var(--color-border);
-        }
-
-        .player-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .player-name {
-            font-size: 0.7em;
-            color: var(--color-text);
-            text-align: center;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .player-attempts {
-            font-size: 0.65em;
-            color: var(--color-tiktok);
-            font-weight: bold;
-        }
-
-        .word-meaning {
-            background: var(--color-surface);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            color: var(--color-text);
-            text-align: center;
-            font-style: italic;
-            font-size: 0.9em;
-            display: none; /* Hidden during game */
-        }
-
-        .meaning-reveal {
-            background: linear-gradient(135deg, var(--color-correct), #5a9654);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: white;
-            animation: slideDown 0.5s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .meaning-reveal h3 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: white;
-        }
-
-        .meaning-reveal .word-display {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 10px 0;
-            letter-spacing: 2px;
-        }
-
-        .meaning-reveal .meaning-text {
-            font-size: 1.1em;
-            line-height: 1.5;
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .meaning-reveal .meaning-scroll {
-            animation: scrollText 8s linear;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        @keyframes scrollText {
+        
+        /* Animasi untuk Pemenang */
+        @keyframes zoomInFade {
             0% {
-                transform: translateX(0);
+                transform: scale(0.5);
+                opacity: 0;
             }
             100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        .meaning-reveal .next-game-info {
-            font-size: 0.9em;
-            margin-top: 15px;
-            opacity: 0.9;
-        }
-
-        .game-board {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            margin-bottom: 15px;
-            padding: 8px;
-            background: var(--color-surface);
-            border-radius: 10px;
-            max-height: calc(100vh - 300px);
-            overflow-y: auto;
-        }
-
-        .row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-        }
-
-        .row-player-info {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 100px;
-            flex-shrink: 0;
-        }
-
-        .row-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--color-tiktok);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9em;
-            border: 2px solid var(--color-border);
-            flex-shrink: 0;
-        }
-
-        .row-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .row-nickname {
-            font-size: 0.7em;
-            color: var(--color-tiktok);
-            font-weight: 600;
-            max-width: 60px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .row-tiles {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 2px;
-            flex: 1;
-        }
-
-        .tile {
-            width: 100%;
-            aspect-ratio: 1;
-            max-width: 45px;
-            max-height: 45px;
-            border: 2px solid var(--color-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-            font-weight: bold;
-            color: var(--color-text);
-            text-transform: uppercase;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .tile.filled {
-            border-color: var(--color-key-bg);
-            animation: pop 0.1s ease-in-out;
-        }
-
-        .tile.correct {
-            background-color: var(--color-correct);
-            border-color: var(--color-correct);
-            animation: flip 0.5s ease-in-out;
-        }
-
-        .tile.present {
-            background-color: var(--color-present);
-            border-color: var(--color-present);
-            animation: flip 0.5s ease-in-out;
-        }
-
-        .tile.absent {
-            background-color: var(--color-absent);
-            border-color: var(--color-absent);
-            animation: flip 0.5s ease-in-out;
-        }
-
-        @keyframes pop {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes flip {
-            0% { transform: rotateX(0); }
-            50% { transform: rotateX(90deg); }
-            100% { transform: rotateX(0); }
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary), #ff4d8f);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--color-key-bg);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #9a9a9b;
-        }
-
-        .stats-section {
-            padding: 15px;
-            max-width: 100%;
-            height: calc(100vh - 60px);
-            overflow-y: auto;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--color-surface);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid var(--color-border);
-        }
-
-        .stat-card-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: var(--color-tiktok);
-            margin-bottom: 8px;
-        }
-
-        .stat-card-label {
-            font-size: 0.9em;
-            color: var(--color-text);
-            opacity: 0.7;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, var(--color-tiktok), #00c9ff);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            text-align: center;
-            font-weight: bold;
-            color: #000;
-            font-size: 0.9em;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: var(--color-surface);
-            border-radius: 8px;
-            font-size: 0.85em;
-        }
-
-        .input-group {
-            margin-bottom: 12px;
-        }
-
-        .input-label {
-            color: var(--color-text);
-            font-size: 0.8em;
-            margin-bottom: 4px;
-            display: block;
-            opacity: 0.8;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff4444;
-            animation: pulse 2s infinite;
-        }
-
-        .status-indicator.connected {
-            background: #44ff44;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .username-input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid var(--color-border);
-            background: var(--color-surface);
-            color: var(--color-text);
-            border-radius: 8px;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            background: var(--color-surface);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .chat-message {
-            margin-bottom: 10px;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            border-left: 3px solid var(--color-tiktok);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .chat-user {
-            font-weight: bold;
-            color: var(--color-tiktok);
-            margin-bottom: 4px;
-            font-size: 0.85em;
-        }
-
-        .chat-text {
-            color: var(--color-text);
-            word-wrap: break-word;
-            font-size: 0.8em;
-        }
-
-        .guess-result {
-            font-size: 0.9em;
-            margin-top: 5px;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .guess-result.valid {
-            background: rgba(106, 170, 100, 0.2);
-            color: var(--color-correct);
-        }
-
-        .guess-result.invalid {
-            background: rgba(120, 124, 126, 0.2);
-            color: var(--color-absent);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--color-bg);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            animation: modalPop 0.3s ease;
-        }
-
-        @keyframes modalPop {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
                 transform: scale(1);
                 opacity: 1;
             }
         }
-
-        .modal-content h2 {
-            color: var(--color-text);
-            margin-bottom: 20px;
-            font-size: 2em;
+        .animate-winner {
+            animation: zoomInFade 0.5s ease-out forwards;
         }
-
-        .modal-content p {
-            color: var(--color-text);
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-box {
-            background: var(--color-surface);
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--color-tiktok);
-        }
-
-        .stat-label {
-            color: var(--color-text);
-            opacity: 0.7;
-            font-size: 0.9em;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .game-section {
-                padding: 15px;
-            }
-
-            .chat-section {
-                height: 450px;
-                padding: 12px;
-            }
-        }            @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                gap: 15px;
-            }
-
-            .game-section {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 1.8em;
-                margin-bottom: 8px;
-            }
-
-            .tiktok-badge {
-                font-size: 0.8em;
-                padding: 6px 12px;
-            }
-
-            .game-info {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .info-box {
-                padding: 8px 15px;
-            }
-
-            .info-label {
-                font-size: 0.75em;
-            }
-
-            .info-value {
-                font-size: 1.3em;
-            }
-
-            .word-meaning {
-                padding: 12px;
-                font-size: 0.9em;
-            }
-
-            .game-board {
-                padding: 10px;
-                gap: 3px;
-            }
-
-            .row {
-                gap: 4px;
-                padding: 4px;
-            }
-
-            .row-player-info {
-                min-width: 90px;
-                gap: 4px;
-            }
-
-            .row-avatar {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85em;
-            }
-
-            .row-nickname {
-                font-size: 0.65em;
-                max-width: 55px;
-            }
-
-            .row-tiles {
-                gap: 2px;
-            }
-
-            .tile {
-                font-size: 1em;
-                max-width: 40px;
-                max-height: 40px;
-                border-radius: 4px;
-                border-width: 1px;
-            }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                padding: 14px 20px;
-            }
-
-            .chat-section {
-                padding: 15px;
-                height: 450px;
-            }
-
-            .chat-header {
-                padding: 12px;
-                font-size: 0.9em;
-            }
-
-            .connection-status {
-                padding: 8px;
-                font-size: 0.85em;
-            }
-
-            .username-input {
-                padding: 10px;
-                font-size: 0.95em;
-            }
-
-            .chat-messages {
-                padding: 12px;
-            }
-
-            .chat-message {
-                padding: 8px;
-                margin-bottom: 10px;
-            }
-
-            .chat-user {
-                font-size: 0.9em;
-            }
-
-            .chat-text {
-                font-size: 0.85em;
-            }
-
-            .modal-content {
-                padding: 30px 20px;
-                margin: 0 20px;
-                max-width: 90%;
-            }
-
-            .modal-content h2 {
-                font-size: 1.6em;
-                margin-bottom: 15px;
-            }
-
-            .modal-content p {
-                font-size: 1em;
-                margin-bottom: 15px;
-            }
-
-            .stats {
-                gap: 10px;
-            }
-
-            .stat-box {
-                padding: 12px;
-            }
-
-            .stat-value {
-                font-size: 1.6em;
-            }
-
-            .stat-label {
-                font-size: 0.85em;
-            }
-        }            @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            .game-board {
-                padding: 8px;
-                gap: 2px;
-            }
-
-            .row {
-                gap: 4px;
-                padding: 4px;
-            }
-
-            .row-player-info {
-                min-width: 70px;
-                gap: 4px;
-            }
-
-            .row-avatar {
-                width: 24px;
-                height: 24px;
-                font-size: 0.75em;
-            }
-
-            .row-nickname {
-                font-size: 0.55em;
-                max-width: 45px;
-            }
-
-            .row-tiles {
-                gap: 2px;
-            }
-
-            .tile {
-                font-size: 0.9em;
-                max-width: 32px;
-                max-height: 32px;
-            }
-
-            .info-value {
-                font-size: 1.1em;
-            }
-
-            .chat-section {
-                height: 400px;
-            }
-
-            .modal-content {
-                padding: 25px 15px;
-            }
-
-            .stat-value {
-                font-size: 1.4em;
-            }
+        
+        /* --- FITUR ABSURD --- */
+        .absurd-difficulty {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button class="tab-btn active" onclick="switchTab('game')" id="gameTab">
-                🎮 Permainan
-            </button>
-            <button class="tab-btn" onclick="switchTab('chat')" id="chatTab">
-                💬 Live Chat
-            </button>
-            <button class="tab-btn" onclick="switchTab('stats')" id="statsTab">
-                📊 Statistik
-            </button>
-        </div>
+<body class="bg-black text-white flex flex-col h-screen overflow-hidden">
 
-        <!-- Game Tab -->
-        <div class="tab-content active" id="gameContent">
-            <div class="game-section">
-                <div class="header">
-                    <h1>🎮 Wordle Indonesia</h1>
-                    <div class="tiktok-badge">Live dengan TikTok</div>
-                </div>
+    <!-- 1. Navigasi Tab -->
+    <nav class="flex border-b border-gray-700 bg-black sticky top-0 z-10">
+        <button id="tab-connect" class="flex-1 py-3 px-4 text-center font-semibold bg-gray-800 text-white transition-colors duration-200">
+            Koneksi
+        </button>
+        <button id="tab-game" class="flex-1 py-3 px-4 text-center font-semibold text-gray-400 hover:bg-gray-800 transition-colors duration-200">
+            Permainan
+        </button>
+        <button id="tab-ranking" class="flex-1 py-3 px-4 text-center font-semibold text-gray-400 hover:bg-gray-800 transition-colors duration-200">
+            Peringkat
+        </button>
+    </nav>
 
-            <div class="mode-selector">
-                <button class="mode-btn active" onclick="setGameMode('classic')" id="classicModeBtn">
-                    🎯 Classic Mode
-                </button>
-                <button class="mode-btn" onclick="setGameMode('rush')" id="rushModeBtn">
-                    ⚡ Time Rush (5 Min)
-                </button>
-            </div>
-
-            <div class="mode-selector" style="margin-top: 10px;">
-                <button class="mode-btn active" onclick="setWordLength(5)" id="word5Btn">
-                    5️⃣ 5 Huruf
-                </button>
-                <button class="mode-btn" onclick="setWordLength(6)" id="word6Btn">
-                    6️⃣ 6 Huruf
-                </button>
-            </div>
-
-            <div class="timer-display" id="timerDisplay" style="display: none;">
-                <div class="timer-value" id="timerValue">5:00</div>
-                <div class="timer-label">Waktu Tersisa</div>
-            </div>
-
-            <div class="game-info">
-                <div class="info-box">
-                    <div class="info-label">Percobaan</div>
-                    <div class="info-value" id="attempts">0/6</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-label">Kata Ditebak</div>
-                    <div class="info-value" id="guessCount">0</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-label">Penebak Live</div>
-                    <div class="info-value" id="playerCount">0</div>
-                </div>
-            </div>
-
-            <div class="players-grid" id="playersGrid" style="display: none;">
-                <!-- Player cards will be added here -->
-            </div>
-
-            <div class="word-meaning" id="wordMeaning">Tebak kata bahasa Indonesia (5 huruf)</div>
-
-            <div id="meaningReveal" style="display: none;"></div>
-
-            <div class="game-board" id="gameBoard"></div>
-
-                <div class="controls">
-                    <button class="btn btn-primary" onclick="newGame()">🎯 Kata Baru</button>
-                    <button class="btn btn-secondary" onclick="showAnswer()">💡 Lihat Jawaban</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chat Tab -->
-        <div class="tab-content" id="chatContent">
-            <div class="chat-section">
-            <div class="chat-header">
-                📱 TikTok Live Chat
-            </div>
-
-            <div class="connection-status">
-                <div class="status-indicator" id="statusIndicator"></div>
-                <span style="color: var(--color-text);" id="statusText">Belum Terhubung</span>
-            </div>
-
-            <div class="input-group">
-                <label class="input-label">🔑 Unique ID TikTok Live</label>
-                <input type="text" class="username-input" id="uniqueIdInput" placeholder="Masukkan @username TikTok">
-            </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <div style="color: var(--color-text); text-align: center; opacity: 0.5; padding: 20px;">
-                    Menunggu chat dari TikTok Live...
-                    <br><br>
-                    <small>💡 Ketik username dan kata 5 huruf untuk simulasi</small>
-                </div>
-            </div>
-
-                <button class="btn btn-primary" style="width: 100%;" id="connectBtn" onclick="connectToTikTok()">
-                    🔗 Hubungkan ke TikTok Live
-                </button>
-            </div>
-        </div>
-
-        <!-- Stats Tab -->
-        <div class="tab-content" id="statsContent">
-            <div class="stats-section">
-                <h2 style="color: var(--color-text); margin-bottom: 20px; text-align: center;">📊 Statistik Permainan</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-card-value" id="statTotalGuesses">0</div>
-                        <div class="stat-card-label">Total Tebakan</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value" id="statTotalPlayers">0</div>
-                        <div class="stat-card-label">Total Penebak</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value" id="statCorrectGuesses">0</div>
-                        <div class="stat-card-label">Tebakan Benar</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value" id="statCurrentWord">-</div>
-                        <div class="stat-card-label">Panjang Kata</div>
-                    </div>
-                </div>
-
-                <div style="background: var(--color-surface); padding: 20px; border-radius: 12px; margin-top: 20px;">
-                    <h3 style="color: var(--color-text); margin-bottom: 15px;">🏆 Leaderboard</h3>
-                    <div id="leaderboardList" style="color: var(--color-text);">
-                        <p style="text-align: center; opacity: 0.5;">Belum ada data</p>
-                    </div>
-                </div>
-
-                <div style="background: var(--color-surface); padding: 20px; border-radius: 12px; margin-top: 20px;">
-                    <h3 style="color: var(--color-text); margin-bottom: 15px;">📝 Riwayat Kata</h3>
-                    <div id="wordHistory" style="color: var(--color-text);">
-                        <p style="text-align: center; opacity: 0.5;">Belum ada riwayat</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <h2 id="resultTitle">🎉 Selamat!</h2>
-            <p id="resultMessage">Kata berhasil ditebak!</p>
-            <div class="stats">
-                <div class="stat-box">
-                    <div class="stat-value" id="modalAttempts">0</div>
-                    <div class="stat-label">Percobaan</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="modalPlayers">0</div>
-                    <div class="stat-label">Penebak</div>
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="closeModal()">Tutup</button>
-            <button class="btn btn-secondary" onclick="closeModal(); newGame();">Main Lagi</button>
-        </div>
-    </div>
-
-    <script>
-        const WORDS_5 = [
-            { word: 'BUNGA', meaning: 'Bagian tumbuhan yang berwarna-warni dan harum' },
-            { word: 'MAKAN', meaning: 'Memasukkan makanan ke dalam mulut' },
-            { word: 'BESAR', meaning: 'Ukuran yang lebih dari biasa' },
-            { word: 'KECIL', meaning: 'Ukuran yang kurang dari biasa' },
-            { word: 'RUMAH', meaning: 'Tempat tinggal' },
-            { word: 'MOBIL', meaning: 'Kendaraan bermotor beroda empat' },
-            { word: 'BUKU', meaning: 'Lembaran kertas berisi tulisan yang dijilid' },
-            { word: 'LAMPU', meaning: 'Alat untuk menerangi' },
-            { word: 'PINTU', meaning: 'Tempat keluar masuk ruangan' },
-            { word: 'JALAN', meaning: 'Tempat untuk dilalui' },
-            { word: 'HUJAN', meaning: 'Air yang turun dari langit' },
-            { word: 'ANGIN', meaning: 'Udara yang bergerak' },
-            { word: 'POHON', meaning: 'Tumbuhan besar dengan batang keras' },
-            { word: 'SINGA', meaning: 'Hewan buas raja hutan' },
-            { word: 'HARUM', meaning: 'Bau yang sedap' },
-            { word: 'MANIS', meaning: 'Rasa seperti gula' },
-            { word: 'HIJAU', meaning: 'Warna seperti daun' },
-            { word: 'MERAH', meaning: 'Warna seperti darah' },
-            { word: 'PUTIH', meaning: 'Warna seperti susu' },
-            { word: 'HITAM', meaning: 'Warna gelap tanpa cahaya' },
-            { word: 'INDAH', meaning: 'Cantik dan menyenangkan dipandang' },
-            { word: 'CINTA', meaning: 'Perasaan sayang yang mendalam' },
-            { word: 'MIMPI', meaning: 'Pengalaman saat tidur' },
-            { word: 'DUNIA', meaning: 'Tempat semua makhluk hidup' },
-            { word: 'LANGIT', meaning: 'Ruang di atas bumi' },
-            { word: 'LAUT', meaning: 'Air asin yang luas' },
-            { word: 'GUNUNG', meaning: 'Tanah yang sangat tinggi' },
-            { word: 'SUNGAI', meaning: 'Air mengalir panjang' },
-            { word: 'PANTAI', meaning: 'Tepi laut' },
-            { word: 'PASIR', meaning: 'Butiran halus dari batu' },
-            { word: 'WAKTU', meaning: 'Saat terjadinya sesuatu' },
-            { word: 'DUNIA', meaning: 'Bumi tempat kita hidup' },
-            { word: 'BEBAS', meaning: 'Tidak terikat atau terkekang' },
-            { word: 'SUSAH', meaning: 'Sulit atau tidak mudah' },
-            { word: 'SENANG', meaning: 'Merasa gembira' },
-            { word: 'SEDIH', meaning: 'Merasa duka' },
-            { word: 'KERAS', meaning: 'Tidak lembut atau padat' },
-            { word: 'LEMAH', meaning: 'Tidak kuat' },
-            { word: 'KUAT', meaning: 'Mempunyai tenaga besar' },
-            { word: 'CEPAT', meaning: 'Dalam waktu singkat' },
-            { word: 'LAMBAT', meaning: 'Tidak cepat' },
-            { word: 'PANAS', meaning: 'Bersuhu tinggi' },
-            { word: 'DINGIN', meaning: 'Bersuhu rendah' },
-            { word: 'TERANG', meaning: 'Ada cahaya' },
-            { word: 'GELAP', meaning: 'Tidak ada cahaya' },
-            { word: 'BASAH', meaning: 'Mengandung air' },
-            { word: 'KERING', meaning: 'Tidak basah' },
-            { word: 'KOTOR', meaning: 'Tidak bersih' },
-            { word: 'BERSIH', meaning: 'Tidak ada kotoran' },
-            { word: 'TAJAM', meaning: 'Mudah melukai' }
-        ];
-
-        const WORDS_6 = [
-            { word: 'ADALAH', meaning: 'Kata penghubung untuk menerangkan' },
-            { word: 'BAHASA', meaning: 'Sistem lambang bunyi' },
-            { word: 'CANTIK', meaning: 'Indah dipandang mata' },
-            { word: 'DENGAN', meaning: 'Kata depan penghubung' },
-            { word: 'EMPAT', meaning: 'Bilangan setelah tiga' },
-            { word: 'FAKTOR', meaning: 'Hal yang menyebabkan' },
-            { word: 'GAJAH', meaning: 'Binatang besar bertelinga lebar' },
-            { word: 'HABITAT', meaning: 'Tempat tinggal makhluk hidup' },
-            { word: 'IDENTIK', meaning: 'Sama persis' },
-            { word: 'JENDELA', meaning: 'Lubang pada dinding untuk cahaya' },
-            { word: 'KAMPUNG', meaning: 'Desa atau kelompok rumah' },
-            { word: 'LAMBAT', meaning: 'Tidak cepat' },
-            { word: 'MAMPU', meaning: 'Dapat atau sanggup' },
-            { word: 'NAMUN', meaning: 'Tetapi atau akan tetapi' },
-            { word: 'OLAHRAGA', meaning: 'Kegiatan jasmani' },
-            { word: 'PAHLAWAN', meaning: 'Orang yang gagah berani' },
-            { word: 'QUALITY', meaning: 'Kualitas atau mutu' },
-            { word: 'RAKYAT', meaning: 'Sekelompok orang dalam negara' },
-            { word: 'SANTAI', meaning: 'Tenang dan tidak tegang' },
-            { word: 'TEMPAT', meaning: 'Lokasi atau ruang' },
-            { word: 'UNTUK', meaning: 'Kata depan tujuan' },
-            { word: 'VAKSIN', meaning: 'Zat untuk kekebalan tubuh' },
-            { word: 'WARNA', meaning: 'Kesan pada mata' },
-            { word: 'YAHUDI', meaning: 'Penganut agama Yahudi' },
-            { word: 'ZAMAN', meaning: 'Masa atau periode waktu' },
-            { word: 'KOMPUTER', meaning: 'Alat pengolah data elektronik' },
-            { word: 'SEKOLAH', meaning: 'Tempat belajar' },
-            { word: 'TAMBAH', meaning: 'Bertambah atau menambah' },
-            { word: 'BERKAH', meaning: 'Anugerah atau nikmat' },
-            { word: 'SEJUK', meaning: 'Agak dingin dan nyaman' },
-            { word: 'TERTIB', meaning: 'Teratur dan rapi' },
-            { word: 'SISTEM', meaning: 'Susunan yang teratur' },
-            { word: 'MODERN', meaning: 'Terbaru atau kekinian' },
-            { word: 'ENERGI', meaning: 'Tenaga atau kekuatan' },
-            { word: 'GEREJA', meaning: 'Tempat ibadah Kristen' },
-            { word: 'MASJID', meaning: 'Tempat ibadah Islam' },
-            { word: 'BUDAYA', meaning: 'Hasil cipta manusia' },
-            { word: 'SAHABAT', meaning: 'Teman dekat' },
-            { word: 'KELUARGA', meaning: 'Ibu, ayah dan anak' },
-            { word: 'SEMANGAT', meaning: 'Kemauan keras' },
-            { word: 'PRESTASI', meaning: 'Hasil yang dicapai' },
-            { word: 'EKONOMI', meaning: 'Ilmu tentang produksi' },
-            { word: 'STRUKTUR', meaning: 'Susunan dan hubungan' },
-            { word: 'ARTIKEL', meaning: 'Tulisan dalam majalah' },
-            { word: 'KONSEP', meaning: 'Rancangan atau ide' }
-        ];
-
-        let WORDS = WORDS_5; // Default kata 5 huruf
-        let wordLength = 5; // Track current word length
-
-        let currentWord = null;
-        let currentRow = 0;
-        let gameOver = false;
-        let guessedWords = new Set();
-        let players = new Set();
-        let isConnected = false;
-        let tiktokConnection = null;
-        let gameMode = 'classic'; // 'classic' or 'rush'
-        let timerInterval = null;
-        let timeRemaining = 300; // 5 minutes in seconds
-        let playerData = new Map(); // Store player info: {username: {nickname, avatar, attempts, guesses}}
-
-        function initGame() {
-            const board = document.getElementById('gameBoard');
-            board.innerHTML = '';
-            
-            // In rush mode, show unlimited rows (empty initially)
-            // In classic mode, show fixed 6 rows
-            const initialRows = gameMode === 'classic' ? 6 : 0;
-            
-            for (let i = 0; i < initialRows; i++) {
-                addGameRow(i);
-            }
-        }
+    <!-- 2. Konten Utama (Game + Chat) -->
+    <main class="flex-grow flex flex-col overflow-hidden">
         
-        function addGameRow(rowIndex) {
-            const board = document.getElementById('gameBoard');
+        <!-- 2.1. Konten Tab Koneksi (Aktif secara default) -->
+        <div id="content-connect" class="flex flex-col h-full">
+            <!-- Umpan Pesan Game/Koneksi -->
+            <div id="message-feed" class="flex-grow h-40 lg:h-48 overflow-y-auto p-4 flex flex-col-reverse space-y-2 space-y-reverse">
+                <!-- Pesan status game akan muncul di sini -->
+            </div>
             
-            const row = document.createElement('div');
-            row.className = 'row';
-            row.id = `row-${rowIndex}`;
-            
-            // Player info section (left side)
-            const playerInfo = document.createElement('div');
-            playerInfo.className = 'row-player-info';
-            playerInfo.id = `player-info-${rowIndex}`;
-            playerInfo.innerHTML = `
-                <div class="row-avatar" id="row-avatar-${rowIndex}" style="display: none;"></div>
-                <div class="row-nickname" id="row-nickname-${rowIndex}"></div>
-            `;
-            row.appendChild(playerInfo);
-            
-            // Tiles section (right side)
-            const tilesContainer = document.createElement('div');
-            tilesContainer.className = 'row-tiles';
-            tilesContainer.style.gridTemplateColumns = `repeat(${wordLength}, 1fr)`;
-            
-            for (let j = 0; j < wordLength; j++) {
-                const tile = document.createElement('div');
-                tile.className = 'tile';
-                tile.id = `tile-${rowIndex}-${j}`;
-                tile.textContent = '';
-                tilesContainer.appendChild(tile);
-            }
-            
-            row.appendChild(tilesContainer);
-            board.appendChild(row);
-        }
-
-        function setWordLength(length) {
-            wordLength = length;
-            WORDS = length === 5 ? WORDS_5 : WORDS_6;
-            
-            document.getElementById('word5Btn').classList.toggle('active', length === 5);
-            document.getElementById('word6Btn').classList.toggle('active', length === 6);
-            
-            newGame();
-        }
-
-        function newGame() {
-            const randomIndex = Math.floor(Math.random() * WORDS.length);
-            currentWord = WORDS[randomIndex];
-            currentRow = 0;
-            gameOver = false;
-            guessedWords.clear();
-            players.clear();
-            playerData.clear();
-            
-            initGame();
-            updateStats();
-            updatePlayersGrid();
-            document.getElementById('wordMeaning').textContent = currentWord.meaning;
-            
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = `<div style="color: var(--color-text); text-align: center; opacity: 0.5; padding: 20px;">Kata baru dimulai! Kirim tebakan ${wordLength} huruf 🎮</div>`;
-            
-            // Start timer for rush mode
-            if (gameMode === 'rush') {
-                startTimer();
-            } else {
-                stopTimer();
-            }
-        }
-
-        function setGameMode(mode) {
-            gameMode = mode;
-            
-            document.getElementById('classicModeBtn').classList.toggle('active', mode === 'classic');
-            document.getElementById('rushModeBtn').classList.toggle('active', mode === 'rush');
-            
-            const timerDisplay = document.getElementById('timerDisplay');
-            const playersGrid = document.getElementById('playersGrid');
-            const attemptsBox = document.querySelector('.info-box:first-child');
-            
-            if (mode === 'rush') {
-                timerDisplay.style.display = 'block';
-                playersGrid.style.display = 'grid';
-                attemptsBox.style.display = 'none'; // Hide classic attempts counter
-                timeRemaining = 300;
-                updateTimerDisplay();
-            } else {
-                timerDisplay.style.display = 'none';
-                playersGrid.style.display = 'none';
-                attemptsBox.style.display = 'block';
-                stopTimer();
-            }
-            
-            newGame();
-        }
-
-        function startTimer() {
-            stopTimer();
-            timeRemaining = 300; // Reset to 5 minutes
-            updateTimerDisplay();
-            
-            timerInterval = setInterval(() => {
-                timeRemaining--;
-                updateTimerDisplay();
-                
-                if (timeRemaining <= 60) {
-                    document.getElementById('timerDisplay').classList.add('warning');
-                }
-                
-                if (timeRemaining <= 0) {
-                    stopTimer();
-                    endRushMode();
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            document.getElementById('timerDisplay').classList.remove('warning');
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            document.getElementById('timerValue').textContent = display;
-        }
-
-        function endRushMode() {
-            gameOver = true;
-            
-            // Find winner (player with correct guess)
-            let winner = null;
-            playerData.forEach((data, username) => {
-                if (data.correct) {
-                    winner = { username, ...data };
-                }
-            });
-            
-            setTimeout(() => {
-                if (winner) {
-                    document.getElementById('resultTitle').textContent = '🎉 Time Rush Selesai!';
-                    document.getElementById('resultMessage').textContent = `Pemenang: @${winner.nickname || winner.username}\nKata: "${currentWord.word}"`;
-                } else {
-                    document.getElementById('resultTitle').textContent = '⏰ Waktu Habis!';
-                    document.getElementById('resultMessage').textContent = `Kata yang benar: "${currentWord.word}"\nTidak ada yang berhasil menebak!`;
-                }
-                document.getElementById('modalAttempts').textContent = guessedWords.size;
-                document.getElementById('modalPlayers').textContent = players.size;
-                document.getElementById('resultModal').classList.add('active');
-            }, 500);
-        }
-
-        function updatePlayersGrid() {
-            const grid = document.getElementById('playersGrid');
-            grid.innerHTML = '';
-            
-            playerData.forEach((data, username) => {
-                const card = document.createElement('div');
-                card.className = `player-card ${data.correct ? 'winner' : ''}`;
-                
-                const avatar = document.createElement('div');
-                avatar.className = 'player-avatar';
-                if (data.avatar) {
-                    const img = document.createElement('img');
-                    img.src = data.avatar;
-                    img.alt = username;
-                    img.onerror = function() {
-                        // Fallback if image fails to load
-                        this.parentElement.textContent = (data.nickname || username).charAt(0).toUpperCase();
-                    };
-                    avatar.appendChild(img);
-                } else {
-                    avatar.textContent = (data.nickname || username).charAt(0).toUpperCase();
-                }
-                
-                const name = document.createElement('div');
-                name.className = 'player-name';
-                name.textContent = data.nickname || username;
-                
-                const attempts = document.createElement('div');
-                attempts.className = 'player-attempts';
-                attempts.textContent = data.correct ? '✅ BENAR' : `${data.attempts}/6`;
-                
-                card.appendChild(avatar);
-                card.appendChild(name);
-                card.appendChild(attempts);
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function makeGuess(guess, username, nickname, avatar) {
-            guess = guess.toUpperCase().trim();
-            
-            if (guess.length !== wordLength) return false;
-            if (!/^[A-Z]+$/.test(guess)) return false;
-            
-            // Initialize player data if not exists
-            if (!playerData.has(username)) {
-                playerData.set(username, {
-                    nickname: nickname || username,
-                    avatar: avatar || null,
-                    attempts: 0,
-                    guesses: [],
-                    correct: false
-                });
-            }
-            
-            const player = playerData.get(username);
-            
-            // No limit on attempts in rush mode - removed the 6x limit
-            
-            // Check if player already guessed correctly
-            if (player.correct) {
-                return false;
-            }
-            
-            players.add(username);
-            guessedWords.add(guess);
-            player.attempts++;
-            player.guesses.push(guess);
-            
-            // Classic mode: display on board
-            if (gameMode === 'classic') {
-                if (gameOver || currentRow >= 6) return false;
-                
-                // Set player info (avatar and nickname on the left)
-                const rowAvatar = document.getElementById(`row-avatar-${currentRow}`);
-                const rowNickname = document.getElementById(`row-nickname-${currentRow}`);
-                
-                if (avatar) {
-                    rowAvatar.innerHTML = `<img src="${avatar}" alt="${username}">`;
-                } else {
-                    rowAvatar.textContent = (nickname || username).charAt(0).toUpperCase();
-                }
-                rowAvatar.style.display = 'flex';
-                rowNickname.textContent = nickname || username;
-                
-                // Set tiles
-                for (let i = 0; i < wordLength; i++) {
-                    const tile = document.getElementById(`tile-${currentRow}-${i}`);
-                    tile.textContent = guess[i];
-                    tile.classList.add('filled');
-                    
-                    setTimeout(() => {
-                        if (guess[i] === currentWord.word[i]) {
-                            tile.classList.add('correct');
-                        } else if (currentWord.word.includes(guess[i])) {
-                            tile.classList.add('present');
-                        } else {
-                            tile.classList.add('absent');
-                        }
-                    }, i * 100);
-                }
-                
-                currentRow++;
-                
-                if (guess === currentWord.word) {
-                    gameOver = true;
-                    player.correct = true;
-                    setTimeout(() => showWinModal(), 1000);
-                }
-                
-                if (currentRow >= 6 && !gameOver) {
-                    gameOver = true;
-                    setTimeout(() => showLoseModal(), 1000);
-                }
-            } else {
-                // Rush mode: add dynamic row for each guess
-                addGameRow(currentRow);
-                
-                // Set player info
-                const rowAvatar = document.getElementById(`row-avatar-${currentRow}`);
-                const rowNickname = document.getElementById(`row-nickname-${currentRow}`);
-                
-                if (avatar) {
-                    rowAvatar.innerHTML = `<img src="${avatar}" alt="${username}">`;
-                } else {
-                    rowAvatar.textContent = (nickname || username).charAt(0).toUpperCase();
-                }
-                rowAvatar.style.display = 'flex';
-                rowNickname.textContent = nickname || username;
-                
-                // Set tiles
-                for (let i = 0; i < wordLength; i++) {
-                    const tile = document.getElementById(`tile-${currentRow}-${i}`);
-                    tile.textContent = guess[i];
-                    tile.classList.add('filled');
-                    
-                    setTimeout(() => {
-                        if (guess[i] === currentWord.word[i]) {
-                            tile.classList.add('correct');
-                        } else if (currentWord.word.includes(guess[i])) {
-                            tile.classList.add('present');
-                        } else {
-                            tile.classList.add('absent');
-                        }
-                    }, i * 100);
-                }
-                
-                currentRow++;
-                
-                // Rush mode: check for correct guess
-                if (guess === currentWord.word) {
-                    player.correct = true;
-                    if (!gameOver) {
-                        gameOver = true;
-                        stopTimer();
-                        setTimeout(() => showWinModal(), 1000);
-                    }
-                }
-            }
-            
-            updateStats();
-            updatePlayersGrid();
-            return true;
-        }
-
-        function updateStats() {
-            document.getElementById('attempts').textContent = `${currentRow}/6`;
-            document.getElementById('guessCount').textContent = guessedWords.size;
-            document.getElementById('playerCount').textContent = players.size;
-            
-            // Update stats tab
-            document.getElementById('statTotalGuesses').textContent = guessedWords.size;
-            document.getElementById('statTotalPlayers').textContent = players.size;
-            document.getElementById('statCurrentWord').textContent = `${wordLength} Huruf`;
-            
-            // Count correct guesses
-            let correctCount = 0;
-            playerData.forEach((data) => {
-                if (data.correct) correctCount++;
-            });
-            document.getElementById('statCorrectGuesses').textContent = correctCount;
-            
-            updateLeaderboard();
-        }
-
-        function updateLeaderboard() {
-            const leaderboard = document.getElementById('leaderboardList');
-            const sortedPlayers = Array.from(playerData.entries())
-                .sort((a, b) => {
-                    if (a[1].correct && !b[1].correct) return -1;
-                    if (!a[1].correct && b[1].correct) return 1;
-                    return a[1].attempts - b[1].attempts;
-                })
-                .slice(0, 10);
-            
-            if (sortedPlayers.length === 0) {
-                leaderboard.innerHTML = '<p style="text-align: center; opacity: 0.5;">Belum ada data</p>';
-                return;
-            }
-            
-            leaderboard.innerHTML = sortedPlayers.map((entry, index) => {
-                const [username, data] = entry;
-                const rank = index + 1;
-                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-                return `
-                    <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px;">
-                        <span style="font-size: 1.2em; min-width: 30px;">${medal}</span>
-                        <div style="flex: 1;">
-                            <div style="font-weight: bold;">${data.nickname || username}</div>
-                            <div style="font-size: 0.8em; opacity: 0.7;">${data.attempts} tebakan ${data.correct ? '✅' : ''}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function switchTab(tabName) {
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`${tabName}Tab`).classList.add('active');
-            
-            // Update tab contents
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(`${tabName}Content`).classList.add('active');
-            
-            // Update stats when switching to stats tab
-            if (tabName === 'stats') {
-                updateStats();
-            }
-        }
-
-        function showWinModal() {
-            showMeaningReveal(true);
-        }
-
-        function showLoseModal() {
-            showMeaningReveal(false);
-        }
-
-        function showMeaningReveal(isWin) {
-            const meaningReveal = document.getElementById('meaningReveal');
-            const meaning = currentWord.meaning;
-            
-            // Check if meaning is long (more than 50 characters)
-            const isLongMeaning = meaning.length > 50;
-            
-            let meaningHTML = '';
-            if (isLongMeaning) {
-                meaningHTML = `<div class="meaning-scroll">${meaning}</div>`;
-            } else {
-                meaningHTML = meaning;
-            }
-            
-            meaningReveal.innerHTML = `
-                <div class="meaning-reveal">
-                    <h3>${isWin ? '🎉 Selamat! Kata Berhasil Ditebak!' : '⏰ Waktu Habis / Game Over!'}</h3>
-                    <div class="word-display">${currentWord.word}</div>
-                    <div class="meaning-text">
-                        ${meaningHTML}
-                    </div>
-                    <div class="next-game-info">
-                        ⏳ Game baru dimulai dalam 5 detik...
-                    </div>
+            <!-- Input Bar Koneksi -->
+            <footer class="p-3 border-t border-gray-700 bg-black sticky bottom-0 z-10">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="tiktok-username-input" class="flex-grow bg-gray-800 rounded-full px-4 py-2 text-white outline-none placeholder-gray-500" placeholder="...EVIL gnades gnay koTkiT emanresu@ nakussaM" dir="rtl">
+                    <button id="connect-button" class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white">
+                        <i class="fas fa-play"></i>
+                    </button>
                 </div>
-            `;
-            
-            meaningReveal.style.display = 'block';
-            
-            // Auto start new game after 5 seconds
-            setTimeout(() => {
-                meaningReveal.style.display = 'none';
-                newGame();
-            }, 5000);
-        }
+            </footer>
+        </div>
+        
+        <!-- 2.2. Konten Tab Permainan (Tersembunyi secara default) -->
+        <div id="content-game" class="hidden flex flex-col h-full">
+            <!-- Judul Game -->
+            <div class="p-3 text-center bg-gray-900 sticky top-0 z-10 flex-shrink-0">
+                <h2 class="text-lg font-extrabold text-yellow-400">WORDLE 6 HURUF</h2>
+                <p id="game-status" class="text-sm text-gray-300">Memuat kosakata...</p>
+                <div id="word-display" class="hidden text-xl font-bold text-green-500 mt-2"></div>
+            </div>
 
-        function closeModal() {
-            document.getElementById('resultModal').classList.remove('active');
-        }
+            <!-- Papan Permainan -->
+            <div id="game-board" class="flex-grow overflow-y-auto p-4 space-y-2 absurd-difficulty">
+                <!-- Baris tebakan akan ditambahkan di sini oleh JS -->
+            </div>
 
-        function showAnswer() {
-            if (currentWord) {
-                alert(`Jawaban: ${currentWord.word}\nArti: ${currentWord.meaning}`);
-            }
-        }
+            <!-- Pemisah -->
+            <div class="border-t border-gray-700 mx-4 flex-shrink-0"></div>
+        </div>
 
-        function addChatMessage(username, message, isValid, isCorrect) {
-            const chatMessages = document.getElementById('chatMessages');
+        <!-- 2.3. Konten Tab Peringkat (Tersembunyi secara default) -->
+        <div id="content-ranking" class="hidden flex flex-col h-full p-4 overflow-y-auto">
+            <h2 class="text-lg font-extrabold text-yellow-400 text-center mb-4">TOP 5 PEMENANG</h2>
+            <div id="leaderboard-content" class="space-y-3">
+                <!-- Peringkat akan dimuat di sini oleh JS -->
+                <p class="text-gray-400 text-center">Memuat peringkat...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 3. Overlay Perayaan Pemenang (Tersembunyi) -->
+    <div id="winner-celebration" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 border-4 border-yellow-400 rounded-lg p-8 shadow-xl text-center animate-winner">
+            <h2 class="text-3xl font-bold text-yellow-400 mb-4">JUARA 1!</h2>
+            <img id="winner-img" src="" alt="Pemenang" class="w-24 h-24 rounded-full mx-auto border-4 border-white mb-4">
+            <p id="winner-name" class="text-2xl font-semibold text-white mb-2"></p>
+            <p id="winner-points" class="text-xl text-green-400 font-bold"></p>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // --- IMPORT FIREBASE ---
+        // Menggunakan v12.5.0 sesuai permintaan Anda
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+        import { getFirestore, doc, collection, onSnapshot, runTransaction, query, setLogLevel } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+
+        // --- KONFIGURASI FIREBASE (Sesuai permintaan Anda) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmkg2rZNL0D_lpF2QMZmgle4ASTrIT_r0", // DARI ANDA
+            authDomain: "kuis-tiktok-c9272.firebaseapp.com", // DARI ANDA
+            projectId: "kuis-tiktok-c9272", // DARI ANDA
+            storageBucket: "kuis-tiktok-c9272.firebasestorage.app", // DARI ANDA
+            messagingSenderId: "534386964257", // DARI ANDA
+            appId: "1:534386964257:web:daa7851240222b80baf060", // DARI ANDA
+            measurementId: "G-BK1DG45JXC" // DARI ANDA
+        };
+
+        // --- Inisialisasi Firebase ---
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app); // Sesuai permintaan Anda
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        setLogLevel('Debug'); // Aktifkan log Firebase
+
+        // --- Variabel Global Firebase ---
+// Hapus 'appId' karena tidak relevan untuk Firebase kustom
+        let userId = null; // Akan diisi oleh auth
+        let scoresCollectionPath = '';
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- AMBIL APP ID DARI CANVAS (JIKA ADA) ---
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            // --- URL BACKEND ---
+            const WSS_URL = 'wss://tiktok-server-claude-production.up.railway.app';
+            let ws; // WebSocket connection
+
+            // --- ELEMEN DOM ---
+            const gameBoard = document.getElementById('game-board');
+            const messageFeed = document.getElementById('message-feed');
+            const tiktokUsernameInput = document.getElementById('tiktok-username-input');
+            const connectButton = document.getElementById('connect-button');
+            const gameStatus = document.getElementById('game-status');
+            const wordDisplay = document.getElementById('word-display');
             
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
+            // --- ELEMEN TAB BARU ---
+            const tabConnect = document.getElementById('tab-connect');
+            const tabGame = document.getElementById('tab-game');
+            const tabRanking = document.getElementById('tab-ranking'); // TAB BARU
+            const contentConnect = document.getElementById('content-connect');
+            const contentGame = document.getElementById('content-game');
+            const contentRanking = document.getElementById('content-ranking'); // KONTEN BARU
+            const leaderboardContent = document.getElementById('leaderboard-content'); // KONTEN BARU
+
+            // --- ELEMEN PEMENANG BARU ---
+            const winnerCelebration = document.getElementById('winner-celebration');
+            const winnerImg = document.getElementById('winner-img');
+            const winnerName = document.getElementById('winner-name');
+            const winnerPoints = document.getElementById('winner-points');
+
+            // --- DATA KATA ---
+            let wordList = []; // Daftar kata master
+            let sessionWordList = []; // Daftar kata untuk sesi ini (akan berkurang)
+            let definitions = new Map(); // Untuk menyimpan arti kata
             
-            const userDiv = document.createElement('div');
-            userDiv.className = 'chat-user';
-            userDiv.textContent = `@${username}`;
-            
-            const textDiv = document.createElement('div');
-            textDiv.className = 'chat-text';
-            textDiv.textContent = message;
-            
-            messageDiv.appendChild(userDiv);
-            messageDiv.appendChild(textDiv);
-            
-            if (isValid !== null) {
-                const resultDiv = document.createElement('div');
-                resultDiv.className = `guess-result ${isValid ? 'valid' : 'invalid'}`;
-                if (isCorrect) {
-                    resultDiv.textContent = '🎉 BENAR! Kata berhasil ditebak!';
-                } else if (isValid) {
-                    resultDiv.textContent = '✅ Tebakan diterima';
-                } else {
-                    resultDiv.textContent = '❌ Harus 5 huruf';
+            // Pengguna default untuk placeholder
+            const defaultAvatar = 'https://placehold.co/40x40/ffffff/000000?text=U'; // 'U' untuk User
+
+            // --- STATUS GAME ---
+            let targetWord = "";
+            let targetDefinition = ""; // Menyimpan arti kata
+            let gameWon = false; // Menandakan ronde ini sudah dimenangkan (oleh juara 1)
+            let currentUniqueId = ''; // Menyimpan ID pengguna terakhir untuk reconnect
+            let roundWinners = []; // Menyimpan [ {user, points}, ... ] untuk ronde ini
+
+            // --- FUNGSI UTAMA ---
+
+            /** Fungsi untuk beralih antar tab */
+            function showTab(tabName) {
+                // Sembunyikan semua konten
+                contentConnect.classList.add('hidden');
+                contentGame.classList.add('hidden');
+                contentGame.classList.remove('flex');
+                contentRanking.classList.add('hidden');
+                contentRanking.classList.remove('flex');
+
+                // Atur ulang semua tab
+                tabConnect.classList.remove('bg-gray-800', 'text-white');
+                tabConnect.classList.add('text-gray-400', 'hover:bg-gray-800');
+                tabGame.classList.remove('bg-gray-800', 'text-white');
+                tabGame.classList.add('text-gray-400', 'hover:bg-gray-800');
+                tabRanking.classList.remove('bg-gray-800', 'text-white');
+                tabRanking.classList.add('text-gray-400', 'hover:bg-gray-800');
+
+                // Tampilkan yang aktif
+                if (tabName === 'game') {
+                    contentGame.classList.remove('hidden');
+                    contentGame.classList.add('flex');
+                    tabGame.classList.add('bg-gray-800', 'text-white');
+                    tabGame.classList.remove('text-gray-400', 'hover:bg-gray-800');
+                } else if (tabName === 'ranking') {
+                    contentRanking.classList.remove('hidden');
+                    contentRanking.classList.add('flex');
+                    tabRanking.classList.add('bg-gray-800', 'text-white');
+                    tabRanking.classList.remove('text-gray-400', 'hover:bg-gray-800');
+                } else { // 'connect'
+                    contentConnect.classList.remove('hidden');
+                    tabConnect.classList.add('bg-gray-800', 'text-white');
+                    tabConnect.classList.remove('text-gray-400', 'hover:bg-gray-800');
                 }
-                messageDiv.appendChild(resultDiv);
-            }
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function connectToTikTok() {
-            const uniqueIdInput = document.getElementById('uniqueIdInput');
-            const uniqueId = uniqueIdInput.value.trim().replace('@', '');
-            
-            if (!uniqueId) {
-                alert('❌ Masukkan username TikTok terlebih dahulu!');
-                return;
             }
 
-            const connectBtn = document.getElementById('connectBtn');
-            const indicator = document.getElementById('statusIndicator');
-            const statusText = document.getElementById('statusText');
-            
-            connectBtn.disabled = true;
-            connectBtn.textContent = '⏳ Menghubungkan...';
-            statusText.textContent = 'Menghubungkan...';
 
-            try {
-                // Backend URL - Railway Deployment
-                const BACKEND_URL = 'wss://tiktok-server-claude-production.up.railway.app';
-                
-                tiktokConnection = new WebSocket(BACKEND_URL);
-
-                tiktokConnection.onopen = () => {
-                    console.log('✅ Connected to backend');
+            /** Ambil daftar kata dari JSON */
+            async function fetchWordList() {
+                gameStatus.textContent = "Memuat kosakata dari server...";
+                try {
+                    const response = await fetch('https://raw.githubusercontent.com/SekaLudianto/katla-claude/refs/heads/main/kosakata.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
                     
-                    // Send connect request with TikTok username
-                    tiktokConnection.send(JSON.stringify({
+                    wordList = [];
+                    definitions.clear();
+
+                    data.forEach(item => {
+                        // Filter hanya untuk kata 6 huruf
+                        if (item.kata && item.kata.length === 6) {
+                            const word = item.kata.toUpperCase();
+                            wordList.push(word);
+                            definitions.set(word, item.arti || "Tidak ada definisi.");
+                        }
+                    });
+
+                    if (wordList.length === 0) {
+                        throw new Error("Tidak ada kata 6 huruf yang ditemukan.");
+                    }
+                    
+                    // Salin ke daftar sesi
+                    sessionWordList = [...wordList];
+                    // Acak daftar sesi
+                    sessionWordList.sort(() => Math.random() - 0.5); 
+
+                } catch (error) {
+                    console.error("Gagal memuat kosakata:", error);
+                    gameStatus.textContent = "Gagal memuat kosakata. Menggunakan daftar cadangan.";
+                    // Daftar cadangan jika fetch gagal
+                    wordList = ["ENAM", "HURUF", "KATA", "COBA", "MAIN", "KEREN"];
+                    wordList.forEach(word => definitions.set(word, "Kata cadangan."));
+                    sessionWordList = [...wordList].sort(() => Math.random() - 0.5);
+                }
+            }
+
+            /** Inisialisasi permainan baru */
+            function initGame() {
+                // Cek jika kata sudah habis
+                if (sessionWordList.length === 0) {
+                    gameStatus.textContent = "Permainan Selesai!";
+                    addGameMessage("Semua kata telah ditebak! Terima kasih sudah bermain.", "host");
+                    wordDisplay.textContent = "LIHAT TAB PERINGKAT UNTUK SKOR AKHIR!";
+                    wordDisplay.classList.remove('hidden');
+                    gameWon = true; // Hentikan permainan
+                    return;
+                }
+
+                // Ambil 1 kata dari daftar sesi dan hapus
+                targetWord = sessionWordList.pop(); 
+                
+                targetDefinition = definitions.get(targetWord);
+                gameWon = false;
+                roundWinners = []; // Kosongkan pemenang ronde
+                gameBoard.innerHTML = '';
+                
+                const level = wordList.length - sessionWordList.length;
+                const totalLevels = wordList.length;
+                gameStatus.textContent = `Level ${level}/${totalLevels} | Tebak kata 6 huruf!`;
+                
+                wordDisplay.classList.add('hidden');
+                
+                addGameMessage(`Level ${level} dimulai! Menunggu tebakan dari chat...`, 'host');
+            }
+
+
+            /** Menghubungkan ke TikTok Live via WebSocket */
+            function connectToTikTok() {
+                const uniqueIdFromInput = tiktokUsernameInput.value.trim().replace('@', '');
+                const uniqueIdToUse = uniqueIdFromInput || currentUniqueId;
+
+                if (!uniqueIdToUse) {
+                    addGameMessage('Masukkan @username TikTok yang valid.', 'error');
+                    return;
+                }
+                
+                currentUniqueId = uniqueIdToUse; 
+
+                if (ws) {
+                    ws.close(); 
+                }
+
+                addGameMessage(`Menyambung ke ${WSS_URL}...`, 'host');
+                ws = new WebSocket(WSS_URL);
+
+                ws.onopen = () => {
+                    addGameMessage('Koneksi server berhasil. Menghubungkan ke TikTok...', 'host');
+                    ws.send(JSON.stringify({
                         type: 'connect',
-                        uniqueId: uniqueId
+                        uniqueId: currentUniqueId 
                     }));
+                    tiktokUsernameInput.disabled = true;
+                    connectButton.disabled = true;
                 };
 
-                tiktokConnection.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    console.log('📨 Received:', data);
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        handleSocketMessage(data); // Proses pesan dari server
+                    } catch(e) {
+                        console.error("Pesan WS tidak valid:", event.data);
+                    }
+                };
+
+                ws.onclose = () => {
+                    addGameMessage('Koneksi ke server terputus. Mencoba menyambung kembali...', 'error');
                     
-                    if (data.type === 'connected') {
-                        isConnected = true;
-                        indicator.classList.add('connected');
-                        statusText.textContent = `Terhubung ke @${uniqueId}`;
-                        connectBtn.textContent = '🔗 Terhubung';
-                        
-                        const chatMessages = document.getElementById('chatMessages');
-                        chatMessages.innerHTML = `<div style="color: var(--color-correct); text-align: center; padding: 20px;">
-                            ✅ Berhasil terhubung ke live @${uniqueId}!<br>
-                            <small>👥 Viewers: ${data.roomInfo?.user_count || 0}</small><br>
-                            <small>Menunggu chat masuk...</small>
-                        </div>`;
-                    } else if (data.type === 'error') {
-                        connectionFailed(data.message);
-                    } else {
-                        handleTikTokMessage(data);
-                    }
+                    // Aktifkan kembali input
+                    tiktokUsernameInput.disabled = false;
+                    connectButton.disabled = false;
+                    tiktokUsernameInput.value = currentUniqueId; 
+
+                    // Nonaktifkan tab game/peringkat dan kembali ke tab koneksi
+                    tabGame.disabled = true;
+                    tabGame.classList.add('opacity-50', 'cursor-not-allowed');
+                    tabRanking.disabled = true;
+                    tabRanking.classList.add('opacity-50', 'cursor-not-allowed');
+                    showTab('connect');
+
+                    // Coba sambungkan kembali secara otomatis setelah 3 detik
+                    setTimeout(connectToTikTok, 3000);
                 };
 
-                tiktokConnection.onerror = (error) => {
+                ws.onerror = (error) => {
                     console.error('WebSocket Error:', error);
-                    connectionFailed('Gagal terhubung ke backend server');
-                };
+                    addGameMessage('Koneksi WebSocket gagal.', 'error');
+                    
+                    // Aktifkan kembali input
+                    tiktokUsernameInput.disabled = false;
+                    connectButton.disabled = false;
+                    tiktokUsernameInput.value = currentUniqueId; 
 
-                tiktokConnection.onclose = () => {
-                    isConnected = false;
-                    indicator.classList.remove('connected');
-                    statusText.textContent = 'Koneksi Terputus';
-                    connectBtn.textContent = '🔗 Hubungkan ke TikTok Live';
-                    connectBtn.disabled = false;
+                    // Nonaktifkan tab game/peringkat dan kembali ke tab koneksi
+                    tabGame.disabled = true;
+                    tabGame.classList.add('opacity-50', 'cursor-not-allowed');
+                    tabRanking.disabled = true;
+                    tabRanking.classList.add('opacity-50', 'cursor-not-allowed');
+                    showTab('connect');
                 };
-
-            } catch (error) {
-                connectionFailed('Error: ' + error.message);
             }
-        }
 
-        function connectionFailed(message) {
-            const connectBtn = document.getElementById('connectBtn');
-            const statusText = document.getElementById('statusText');
-            const indicator = document.getElementById('statusIndicator');
-            
-            indicator.classList.remove('connected');
-            alert('❌ ' + message + '\n\n💡 Pastikan:\n1. Backend server sudah running\n2. Username TikTok sedang LIVE\n3. WebSocket URL sudah benar');
-            
-            statusText.textContent = 'Gagal Terhubung';
-            connectBtn.textContent = '🔗 Hubungkan ke TikTok Live';
-            connectBtn.disabled = false;
-        }
+            /** Memproses pesan yang datang dari WebSocket Server */
+            function handleSocketMessage(data) {
+                switch (data.type) {
+                    case 'connected':
+                        addGameMessage(`Terhubung ke Live @${data.uniqueId}! Menunggu tebakan 6 huruf dari chat...`, 'host');
+                        
+                        // Aktifkan tab game/peringkat dan pindah ke sana
+                        tabGame.disabled = false;
+                        tabGame.classList.remove('opacity-50', 'cursor-not-allowed');
+                        tabRanking.disabled = false;
+                        tabRanking.classList.remove('opacity-50', 'cursor-not-allowed');
+                        showTab('game'); // Otomatis pindah ke tab game
 
-        function handleTikTokMessage(data) {
-            if (!data || !data.type) return;                // Handle chat messages
-            if (data.type === 'chat') {
-                const username = data.username || data.uniqueId || 'Unknown';
-                const nickname = data.nickname || username;
-                const message = data.message || data.comment || '';
-                const avatar = data.profilePictureUrl || data.profilePicUrl || data.avatar || null;
+                        initGame();
+                        break;
+                    case 'chat':
+                        const guess = data.message.trim().toUpperCase();
+                        const user = {
+                            userId: data.userId, // ID unik dari TikTok (PENTING)
+                            name: data.nickname || data.username,
+                            avatar: data.profilePictureUrl || defaultAvatar
+                        };
+
+                        if (!user.userId) {
+                            console.warn("Pesan chat tanpa userId:", data);
+                            return; // Butuh userId untuk skor
+                        }
+                        
+                        // Cek tebakan valid (6 huruf, A-Z)
+                        if (guess.length === 6 && /^[A-Z]+$/.test(guess)) {
+                            handleGuess(guess, user); 
+                        }
+                        break;
+                    case 'gift':
+                        addGameMessage(`Terima kasih ${data.nickname} untuk ${data.giftName}-nya!`, 'gift');
+                        break;
+                    case 'like':
+                        // addGameMessage(`${data.nickname} mengirim ${data.likeCount} like!`, 'like');
+                        break;
+                    case 'follow':
+                        addGameMessage(`${data.nickname} baru saja follow!`, 'follow');
+                        break;
+                    case 'streamEnd':
+                        addGameMessage('Siaran langsung telah berakhir.', 'error');
+                        if (ws) ws.close();
+                        // Nonaktifkan tab game/peringkat dan kembali ke tab koneksi
+                        tabGame.disabled = true;
+                        tabGame.classList.add('opacity-50', 'cursor-not-allowed');
+                        tabRanking.disabled = true;
+                        tabRanking.classList.add('opacity-50', 'cursor-not-allowed');
+                        showTab('connect');
+                        break;
+                    case 'error':
+                        addGameMessage(`Error: ${data.message}`, 'error');
+                        if (ws) ws.close();
+                         // Nonaktifkan tab game/peringkat dan kembali ke tab koneksi
+                        tabGame.disabled = true;
+                        tabGame.classList.add('opacity-50', 'cursor-not-allowed');
+                        tabRanking.disabled = true;
+                        tabRanking.classList.add('opacity-50', 'cursor-not-allowed');
+                        showTab('connect');
+                        break;
+                }
+            }
+
+
+            /** Memproses tebakan Wordle */
+            function handleGuess(guess, user) {
+                // Tampilkan tebakan di papan
+                const row = document.createElement('div');
+                row.className = 'flex items-center space-x-2 w-full max-w-md mx-auto animate-fadeIn absurd-difficulty'; // <--- ROTATE ROW
                 
-                console.log('Chat received:', { username, nickname, message, avatar });
+                let gridHtml = '<div class="grid grid-cols-6 gap-1 flex-grow">';
                 
-                // Check if message matches current word length
-                const cleanMessage = message.toUpperCase().trim();
-                const words = cleanMessage.split(/\s+/);
+                const guessChars = guess.split('');
+                const targetChars = targetWord.split('');
                 
-                // Process each word as potential guess
-                words.forEach(word => {
-                    if (word.length === wordLength && /^[A-Z]+$/.test(word)) {
-                        processGuess(word, username, nickname, avatar);
+                let tiles = []; 
+                let targetBank = [...targetChars]; 
+
+                // Pass 1: Cek Hijau (Correct)
+                for (let i = 0; i < 6; i++) {
+                    if (guessChars[i] === targetChars[i]) {
+                        tiles[i] = { status: 'correct', char: guessChars[i] };
+                        targetBank[i] = null; 
                     } else {
-                        // Show chat message even if not a valid guess
-                        addChatMessage(username, message, null, null);
+                        tiles[i] = { status: 'absent', char: guessChars[i] };
                     }
+                }
+
+                // Pass 2: Cek Kuning (Present) & Abu-abu (Absent)
+                for (let i = 0; i < 6; i++) {
+                    if (tiles[i].status !== 'correct') {
+                        const charIndexInBank = targetBank.indexOf(guessChars[i]);
+                        
+                        if (charIndexInBank > -1) {
+                            tiles[i].status = 'present';
+                            targetBank[charIndexInBank] = null; 
+                        }
+                    }
+                }
+                
+                // Buat HTML berdasarkan status ubin
+                for (let i = 0; i < 6; i++) {
+                    // --- LOGIKA WARNA ABSURD (DIBALIK) ---
+                    let colorClass = 'bg-green-600 border-green-500'; // HIJAU untuk 'absent'
+                    
+                    if (tiles[i].status === 'correct') {
+                        colorClass = 'bg-gray-700 border-gray-600'; // ABU-ABU untuk 'correct'
+                    } else if (tiles[i].status === 'present') {
+                        colorClass = 'bg-yellow-500 border-yellow-400'; // KUNING untuk 'present'
+                    }
+                    // --- AKHIR LOGIKA ABSURD ---
+                    
+                    gridHtml += `
+                        <div class="w-9 h-9 md:w-11 md:h-11 border-2 ${colorClass} rounded-md flex items-center justify-center text-xl font-bold uppercase animate-reveal" style="animation-delay: ${i * 100}ms;">
+                            ${tiles[i].char}
+                        </div>
+                    `;
+                }
+                gridHtml += '</div>';
+
+                row.innerHTML = `
+                    <img src="${user.avatar || defaultAvatar}" alt="${user.name}" class="w-8 h-8 rounded-full border-2 border-pink-500 flex-shrink-0" onerror="this.src='${defaultAvatar}'">
+                    ${gridHtml}
+                    <span class="text-xs font-semibold text-gray-400 w-16 truncate text-right">${user.name}</span>
+                `;
+                
+                gameBoard.appendChild(row);
+                gameBoard.scrollTop = gameBoard.scrollHeight;
+
+                // --- LOGIKA SKOR BARU ---
+                if (guess === targetWord) {
+                    // Cek apakah pengguna ini sudah menang di ronde ini
+                    if (roundWinners.find(w => w.userId === user.userId)) {
+                        return; // Sudah menang, jangan proses lagi
+                    }
+
+                    // Tentukan poin
+                    const points = 3 - roundWinners.length; // 3, 2, atau 1
+
+                    if (points > 0) {
+                        // Tambahkan ke daftar pemenang ronde
+                        roundWinners.push({ ...user, points });
+                        
+                        // Update skor di Firebase
+                        updateUserScore(user, points);
+
+                        if (roundWinners.length === 1) {
+                            // --- JUARA 1 ---
+                            gameWon = true; // Kunci ronde
+                            winGame(user, points); // Mulai perayaan dan timer
+                        } else {
+                            // --- JUARA 2 atau 3 ---
+                            addGameMessage(`🎉 ${user.name} Juara ${roundWinners.length} (+${points} pts)!`, 'host');
+                        }
+                    }
+                }
+            }
+
+            /** Menjalankan logika saat game dimenangkan (oleh Juara 1) */
+            function winGame(user, points) {
+                gameStatus.textContent = `🎉 ${user.name} Menemukan katanya! 🎉`;
+                wordDisplay.textContent = `${targetWord}: ${targetDefinition}`;
+                wordDisplay.classList.remove('hidden');
+
+                // Tampilkan overlay perayaan
+                celebrateWinner(user, points);
+
+                addGameMessage(`Selamat ${user.name}! Artinya: "${targetDefinition}". Kata berikutnya dalam 10 detik...`, 'host');
+
+                // Mulai game baru setelah 10 detik
+                setTimeout(initGame, 10000);
+            }
+
+            /** Menampilkan overlay perayaan */
+            function celebrateWinner(user, points) {
+                winnerImg.src = user.avatar || defaultAvatar;
+                winnerName.textContent = user.name;
+                winnerPoints.textContent = `+${points} Poin!`;
+                winnerCelebration.classList.remove('hidden');
+                winnerCelebration.classList.add('flex');
+
+                // Sembunyikan setelah 5 detik
+                setTimeout(() => {
+                    winnerCelebration.classList.add('hidden');
+                    winnerCelebration.classList.remove('flex');
+                }, 5000);
+            }
+
+            /** Menambahkan pesan ke feed obrolan */
+            function addGameMessage(message, type = 'host') {
+                const msgEl = document.createElement('div');
+                msgEl.className = 'text-sm p-1 animate-fadeIn text-center';
+                
+                let icon = '📢';
+                let color = 'text-yellow-300';
+
+                if (type === 'error') {
+                    icon = '❌';
+                    color = 'text-red-400';
+                } else if (type === 'gift') {
+                    icon = '🎁';
+                    color = 'text-pink-400';
+                } else if (type === 'follow') {
+                    icon = '❤️';
+                    color = 'text-blue-400';
+                }
+                
+                msgEl.innerHTML = `<span class="${color} font-semibold">${icon} ${message}</span>`;
+                
+                messageFeed.prepend(msgEl); 
+                
+                if (messageFeed.children.length > 20) { // Tambah kapasitas pesan
+                    messageFeed.removeChild(messageFeed.lastChild);
+                }
+            }
+
+            // --- FUNGSI FIREBASE BARU ---
+
+            /** Inisialisasi Firebase Auth dan Listener */
+            async function initializeAppFirebase() {
+                try {
+                    // --- PERBAIKAN ---
+                    // Error 'Missing or insufficient permissions' biasanya berarti
+                    // aturan keamanan Firebase Anda tidak mengizinkan penulisan.
+                    // Saya mengubah path database ke path 'public' standar
+                    // yang biasanya diizinkan untuk data bersama.
+                    scoresCollectionPath = `/artifacts/${appId}/public/data/wordleScores`;
+
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            console.log("Firebase Auth berhasil (Anonim), userId:", user.uid);
+                            userId = user.uid; // Simpan userId global (untuk hak tulis)
+                            // Setelah auth siap, pasang listener leaderboard
+                            setupLeaderboardListener();
+                        } else {
+                            console.log("User signed out");
+                            userId = null;
+                        }
+                    });
+
+                    // --- PERBAIKAN ---
+                    // Selalu login secara anonim ke project Firebase kustom Anda.
+                    // `__initial_auth_token` hanya untuk database internal Canvas,
+                    // sehingga menyebabkan error 'auth/custom-token-mismatch'.
+                    await signInAnonymously(auth);
+
+
+                } catch (error) {
+                    console.error("Firebase Init Error:", error);
+                    addGameMessage("Gagal terhubung ke database skor.", "error");
+                }
+            }
+
+            /** Pasang listener real-time ke leaderboard */
+            function setupLeaderboardListener() {
+                if (!db || !scoresCollectionPath) {
+                    console.error("Firestore DB atau Path belum siap.");
+                    return;
+                }
+
+                const q = query(collection(db, scoresCollectionPath));
+                
+                onSnapshot(q, (querySnapshot) => {
+                    const scores = [];
+                    querySnapshot.forEach((doc) => {
+                        scores.push(doc.data());
+                    });
+                    
+                    // Sortir di sisi klien (JS) - (Menghindari kebutuhan indeks komposit)
+                    scores.sort((a, b) => (b.score || 0) - (a.score || 0));
+                    
+                    // Ambil Top 5
+                    const top5 = scores.slice(0, 5);
+                    
+                    // Render ke UI
+                    renderLeaderboard(top5);
+
+                }, (error) => {
+                    console.error("Leaderboard Snapshot Error:", error);
+                    leaderboardContent.innerHTML = '<p class="text-red-400 text-center">Gagal memuat peringkat.</p>';
                 });
             }
 
-            // Handle other TikTok events (gift, like, share, etc.)
-            if (data.type === 'gift') {
-                const username = data.username || data.uniqueId;
-                addChatMessage(username, `🎁 Mengirim gift: ${data.giftName}`, null, null);
+            /** Render UI Leaderboard */
+            function renderLeaderboard(top5) {
+                if (top5.length === 0) {
+                    leaderboardContent.innerHTML = '<p class="text-gray-400 text-center">Belum ada yang mendapatkan skor.</p>';
+                    return;
+                }
+
+                let html = '';
+                top5.forEach((user, index) => {
+                    const rank = index + 1;
+                    let medal = 'bg-gray-600';
+                    if (rank === 1) medal = 'bg-yellow-400';
+                    if (rank === 2) medal = 'bg-gray-300';
+                    if (rank === 3) medal = 'bg-yellow-600';
+                    
+                    html += `
+                        <div class="flex items-center bg-gray-800 p-2 rounded-lg shadow">
+                            <span class="w-8 h-8 rounded-full ${medal} flex items-center justify-center text-black font-bold text-lg mr-3">${rank}</span>
+                            <img src="${user.avatar || user.profilePictureUrl || defaultAvatar}" alt="${user.name}" class="w-10 h-10 rounded-full mr-3 border-2 border-white" onerror="this.src='${defaultAvatar}'">
+                            <div class="flex-grow">
+                                <p class="font-semibold text-white truncate">${user.name || user.nickname}</p>
+                            </div>
+                            <span class="text-xl font-bold text-green-400">${user.score || 0} pts</span>
+                        </div>
+                    `;
+                });
+                leaderboardContent.innerHTML = html;
             }
 
-            if (data.type === 'like') {
-                const username = data.username || data.uniqueId;
-                addChatMessage(username, `❤️ Memberikan ${data.likeCount} like`, null, null);
+            /** Update skor pengguna di Firebase menggunakan Transaksi */
+            async function updateUserScore(user, points) {
+                if (!db || !scoresCollectionPath || !user.userId) {
+                    console.error("Gagal update skor, DB/Path/UserID tidak ada", user);
+                    return;
+                }
+
+                // Gunakan TikTok userId sebagai ID Dokumen
+                const userDocRef = doc(db, scoresCollectionPath, user.userId.toString());
+
+                try {
+                    await runTransaction(db, async (transaction) => {
+                        const userDoc = await transaction.get(userDocRef);
+                        
+                        let currentScore = 0;
+                        if (userDoc.exists()) {
+                            currentScore = userDoc.data().score || 0;
+                        }
+                        
+                        const newScore = currentScore + points;
+                        
+                        // Set/Update data pengguna
+                        transaction.set(userDocRef, {
+                            userId: user.userId,
+                            name: user.name, // Selalu update nama
+                            avatar: user.avatar, // Selalu update avatar
+                            score: newScore
+                        }, { merge: true });
+                    });
+                    console.log(`Skor untuk ${user.name} berhasil diupdate ke ${points} poin.`);
+                } catch (error) {
+                    console.error("Gagal update skor (Transaksi):", error);
+                    addGameMessage(`Gagal menyimpan skor ${user.name}`, 'error');
+                }
             }
-        }
 
-        function processGuess(guess, username, nickname, avatar) {
-            // In rush mode, allow guesses even if someone won (until time runs out)
-            if (gameMode === 'classic' && gameOver) {
-                addChatMessage(username, guess, false, false);
-                return;
+
+            // --- EVENT LISTENERS ---
+            connectButton.addEventListener('click', connectToTikTok);
+            tiktokUsernameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    connectToTikTok();
+                }
+            });
+
+            // Listener untuk Tab
+            tabConnect.addEventListener('click', () => showTab('connect'));
+            tabGame.addEventListener('click', () => {
+                if (!tabGame.disabled) showTab('game');
+            });
+            tabRanking.addEventListener('click', () => {
+                 if (!tabRanking.disabled) showTab('ranking');
+            });
+
+
+            /** Fungsi untuk memulai seluruh aplikasi */
+            async function startup() {
+                // 1. Inisialisasi Firebase
+                await initializeAppFirebase();
+                
+                // 2. Ambil daftar kata
+                await fetchWordList(); 
+                addGameMessage('Kosakata siap. Masukkan @username TikTok Anda dan tekan Play.', 'host');
+                
+                // 3. Atur UI awal
+                tabGame.disabled = true;
+                tabGame.classList.add('opacity-50', 'cursor-not-allowed');
+                tabRanking.disabled = true;
+                tabRanking.classList.add('opacity-50', 'cursor-not-allowed');
+                showTab('connect');
             }
 
-            const isValid = guess.length === wordLength && /^[A-Z]+$/.test(guess);
-            let isCorrect = false;
-
-            if (isValid) {
-                isCorrect = makeGuess(guess, username, nickname, avatar);
-            }
-
-            addChatMessage(username, guess, isValid, isCorrect);
-        }
-
-        // Initialize game on load
-        newGame();
+            // --- MULAI GAME ---
+            startup();
+        });
     </script>
 </body>
 </html>
+
+
+
